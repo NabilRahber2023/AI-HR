@@ -1,0 +1,77 @@
+# 🤖 GITHUB COPILOT SETUP PROMPT
+# ================================================
+# Copy the text below and paste it into GitHub Copilot Chat
+# in VS Code after opening this project folder.
+# ================================================
+
+PASTE THIS INTO COPILOT CHAT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I have a full-stack AI project open in VS Code called "HR AI Platform - 9-Box Grid Framework".
+
+Please help me run it locally by executing these steps in order:
+
+STEP 1 - Create Python virtual environment:
+  python -m venv venv
+  (Windows) venv\Scripts\activate
+  (Mac/Linux) source venv/bin/activate
+  pip install -r requirements.txt
+
+STEP 2 - Setup environment variables:
+  Copy .env.example to .env
+  Edit DATABASE_URL to match my local PostgreSQL credentials
+
+STEP 3 - Create PostgreSQL database:
+  Run: psql -U postgres -c "CREATE DATABASE hr_ai_platform;"
+  (Or guide me through creating it in pgAdmin)
+
+STEP 4 - Generate synthetic employee dataset:
+  python -m app.synthetic_data.generator
+  (This creates data/synthetic_employees.csv with 5000 rows)
+
+STEP 5 - Start the FastAPI backend:
+  uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+  Verify it works at: http://localhost:8000/docs
+
+STEP 6 - Install frontend dependencies and start React:
+  cd frontend
+  npm install
+  npm run dev
+  Verify it works at: http://localhost:5173
+
+STEP 7 - Create an admin account:
+  Go to http://localhost:5173/signup
+  Create account with role = Admin
+
+STEP 8 - Upload the dataset:
+  Login as admin → Upload CSV → select data/synthetic_employees.csv
+
+STEP 9 - Train the ML model:
+  In the app: ML Prediction page → Click "Train Model"
+  Or via terminal: Use the API endpoint POST /prediction/train
+
+STEP 10 - (Optional) Setup Ollama for AI features:
+  Install from https://ollama.ai
+  Run: ollama pull qwen2.5:7b
+  Run: ollama serve
+
+Please walk me through each step, fix any errors that occur,
+and confirm the app is fully working at the end.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ALTERNATIVE - If you prefer Docker:
+
+Paste this into Copilot Chat instead:
+"Help me run this project using Docker Compose.
+Run: docker-compose up -d
+Then open http://localhost:5173"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+COMMON ISSUES TO MENTION TO COPILOT:
+- "PostgreSQL connection refused" → Check pg is running
+- "Module not found" → Re-run pip install -r requirements.txt
+- "npm install fails" → Check Node version is 18+
+- "503 Model not trained" → Do Step 9 first
+- "CORS error" → Check .env FRONTEND_URL=http://localhost:5173

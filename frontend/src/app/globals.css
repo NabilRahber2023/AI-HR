@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9ff;
+  color: #0b1c30;
+  min-height: 100dvh;
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+.bg-login-gradient {
+  background: radial-gradient(circle at top left, #1e3a8a 0%, #00236f 100%);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.nine-box-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.typing-dot { animation: typing 1.4s infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.animate-pulse-subtle { animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Box-shadow glow that expands on hover, for landing-page cards. */
+.glow-card {
+  transition: box-shadow 0.4s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+.glow-card:hover {
+  box-shadow:
+    0 12px 40px -10px rgba(79, 70, 229, 0.55),
+    0 0 60px -14px rgba(79, 70, 229, 0.45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .glow-card { transition: box-shadow 0.4s ease, border-color 0.3s ease; }
+}
+
+/* Seamless infinite tech marquee (moves left -> right like a train). */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  /* Start shifted one full copy to the left, then slide right to 0 -> cards
+     travel from left to right (train motion); the duplicated copy makes the
+     reset at the loop boundary invisible. */
+  animation: marquee-ltr 38s linear infinite;
+}
+.marquee-mask:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee-ltr {
+  0%   { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Keep the left-to-right drift but much slower for reduced-motion users. */
+  .marquee-track { animation-duration: 120s; }
+}
+
+/* Right-to-left variant (cards travel from right to left like a train). */
+.marquee-track-rtl {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-rtl 42s linear infinite;
+}
+.marquee-mask:hover .marquee-track-rtl { animation-play-state: paused; }
+@keyframes marquee-rtl {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track-rtl { animation-duration: 120s; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 text-white font-bold rounded-xl px-6 py-3 hover:shadow-lg active:scale-95 transition-all flex items-center gap-2 justify-center;
+  }
+  .btn-secondary {
+    @apply bg-white border border-gray-300 text-blue-600 font-medium rounded-lg px-4 py-2 hover:bg-gray-100 active:scale-95 transition-all flex items-center gap-2;
+  }
+  .input-field {
+    @apply w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-base text-gray-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all;
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+  }
+  .nav-link {
+    @apply text-blue-600 hover:text-blue-800 px-4 py-3 flex items-center gap-3 rounded-lg transition-all hover:bg-blue-50 font-medium text-base;
+  }
+  .nav-link-active {
+    @apply bg-blue-100 text-blue-900 rounded-lg px-4 py-3 flex items-center gap-3 font-medium text-base;
+  }
+}

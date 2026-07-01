@@ -1,0 +1,195 @@
+# ================================================================
+# ANTIGRAVITY IDE PROMPT
+# ================================================================
+# Paste this entire prompt into Antigravity IDE after extracting
+# the zip into your project's frontend folder.
+# ================================================================
+
+PASTE THIS INTO ANTIGRAVITY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+I have a full-stack HR AI Platform project. I need you to:
+
+1. REPLACE the old Vite/React frontend with the new Next.js frontend
+   that is already in the `hr-nextjs-frontend/` folder.
+
+2. DELETE the old `frontend/` folder completely.
+
+3. RENAME `hr-nextjs-frontend/` to `frontend/`.
+
+4. Inside the new `frontend/` folder, install dependencies and run it:
+   ```
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   The app should start at http://localhost:3000
+
+5. Make sure the backend FastAPI (app/main.py) has CORS configured
+   to allow both http://localhost:3000 AND http://localhost:5173.
+   In `app/main.py`, update the CORSMiddleware to:
+   ```python
+   allow_origins=[
+       "http://localhost:3000",
+       "http://localhost:5173",
+       "http://localhost:8000",
+   ]
+   ```
+
+6. Make sure the `.env.local` file in `frontend/` contains:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   ```
+
+7. Verify the following pages load correctly:
+   - http://localhost:3000/login        ← Login page
+   - http://localhost:3000/signup       ← Signup page
+   - http://localhost:3000/admin        ← Admin Dashboard (after login)
+   - http://localhost:3000/admin/upload ← CSV Upload
+   - http://localhost:3000/admin/search ← Employee Search
+   - http://localhost:3000/admin/prediction ← ML Prediction
+   - http://localhost:3000/admin/metrics    ← Model Metrics
+   - http://localhost:3000/admin/chatbot    ← AI Chatbot
+   - http://localhost:3000/dashboard    ← User Dashboard
+   - http://localhost:3000/chatbot      ← User Chatbot
+
+8. Fix any TypeScript or import errors that come up during `npm run dev`.
+
+9. If `recharts` has SSR issues in Next.js, wrap chart components with:
+   ```tsx
+   import dynamic from 'next/dynamic'
+   const MyChart = dynamic(() => import('./MyChart'), { ssr: false })
+   ```
+
+10. Confirm the app connects to the FastAPI backend at
+    http://localhost:8000 and all API calls work correctly.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+# ================================================================
+# MANUAL STEP-BY-STEP GUIDE
+# (if you prefer doing it yourself without Antigravity)
+# ================================================================
+
+## STEP 1 — Extract the zip
+Unzip `hr-nextjs-frontend.zip` into your project root.
+Your project structure should look like:
+
+  hr-ai-platform/
+  ├── app/               ← FastAPI backend (KEEP AS IS)
+  ├── frontend/          ← OLD Vite frontend (DELETE THIS)
+  ├── hr-nextjs-frontend/ ← NEW Next.js frontend (RENAME TO frontend/)
+  ├── models/
+  ├── data/
+  └── ...
+
+## STEP 2 — Swap the frontend folders
+  # Windows (PowerShell)
+  Remove-Item -Recurse -Force frontend
+  Rename-Item hr-nextjs-frontend frontend
+
+  # Mac/Linux
+  rm -rf frontend
+  mv hr-nextjs-frontend frontend
+
+## STEP 3 — Fix backend CORS
+Open `app/main.py` and update the CORSMiddleware section:
+
+  app.add_middleware(
+      CORSMiddleware,
+      allow_origins=[
+          "http://localhost:3000",   # Next.js default port
+          "http://localhost:5173",   # Vite (kept for compatibility)
+          settings.FRONTEND_URL,
+      ],
+      allow_credentials=True,
+      allow_methods=["*"],
+      allow_headers=["*"],
+  )
+
+## STEP 4 — Update .env (backend)
+In your backend `.env` file, set:
+  FRONTEND_URL=http://localhost:3000
+
+## STEP 5 — Install & run Next.js frontend
+  cd frontend
+  npm install
+  npm run dev
+
+  ✅ Frontend: http://localhost:3000
+  ✅ Backend:  http://localhost:8000
+
+## STEP 6 — Ensure backend is running
+In a separate terminal (from project root, venv activated):
+  uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+## STEP 7 — Login and test
+  1. Open http://localhost:3000
+  2. You'll be redirected to /login
+  3. Use: admin@company.com / admin123
+  4. You'll land on the Admin Dashboard
+  5. Upload data/synthetic_employees.csv via Upload CSV
+  6. Go to ML Prediction → Train Model
+  7. Search employees, view chatbot, check metrics
+
+# ================================================================
+# TROUBLESHOOTING
+# ================================================================
+
+PROBLEM: "Module not found" errors
+FIX: Run `npm install` inside the frontend/ folder
+
+PROBLEM: Charts not rendering (SSR error with recharts)
+FIX: Already handled with 'use client' directive on all pages.
+     If still occurring, add to the component:
+     import dynamic from 'next/dynamic'
+
+PROBLEM: CORS error in browser console
+FIX: Make sure app/main.py has http://localhost:3000 in allow_origins
+     Restart the backend after editing: uvicorn app.main:app --reload
+
+PROBLEM: 401 Unauthorized on API calls
+FIX: Log out, log back in to get a fresh JWT token.
+     Token is stored in localStorage under 'hr-auth-storage'
+
+PROBLEM: Blank page / hydration error
+FIX: These pages use 'use client' and Zustand persist. Clear
+     localStorage and refresh: localStorage.clear()
+
+PROBLEM: Port 3000 already in use
+FIX: Run: npm run dev -- --port 3001
+     Then update NEXT_PUBLIC_API_URL and CORS accordingly
+
+PROBLEM: @tailwindcss/forms not found
+FIX: Run: npm install @tailwindcss/forms
+
+# ================================================================
+# ARCHITECTURE OVERVIEW
+# ================================================================
+
+Frontend (Next.js 14 App Router):
+  src/app/
+    login/page.tsx          → /login
+    signup/page.tsx         → /signup
+    admin/page.tsx          → /admin  (dashboard)
+    admin/upload/page.tsx   → /admin/upload
+    admin/employees/page.tsx → /admin/employees
+    admin/search/page.tsx   → /admin/search
+    admin/prediction/page.tsx → /admin/prediction
+    admin/metrics/page.tsx  → /admin/metrics
+    admin/chatbot/page.tsx  → /admin/chatbot
+    dashboard/page.tsx      → /dashboard
+    chatbot/page.tsx        → /chatbot
+
+  src/components/layout/
+    DashboardLayout.tsx     → Auth guard + Sidebar + TopBar
+    Sidebar.tsx             → Dark navy sidebar (exact Stitch design)
+    TopBar.tsx              → Mobile header
+
+  src/lib/api.ts            → All Axios API calls
+  src/store/authStore.ts    → Zustand JWT auth store
+
+Backend (FastAPI — UNCHANGED except CORS):
+  app/main.py               → Add localhost:3000 to CORS origins
+  Everything else stays exactly as before.
