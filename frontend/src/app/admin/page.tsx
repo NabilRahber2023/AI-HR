@@ -25,7 +25,7 @@ const BOX_STYLES: Record<number, { bg: string; border: string; text: string; hov
 
 function StatCard({ title, value, icon, sub }: { title: string; value: string; icon: string; sub?: string }) {
   return (
-    <div className="min-w-[240px] flex-1 bg-white p-6 rounded-xl shadow-sm border border-outline-variant">
+    <div className="min-w-0 bg-white p-6 rounded-xl shadow-sm border border-outline-variant">
       <div className="flex justify-between items-start mb-4">
         <div className="p-2 bg-primary/10 rounded-lg text-2xl">{icon}</div>
         {sub && <span className="text-primary font-bold text-xs">{sub}</span>}
@@ -80,9 +80,9 @@ export default function AdminDashboard() {
 
         {/* Stat Cards */}
         <section className="mb-8">
-          <div className="flex overflow-x-auto gap-4 pb-4 custom-scrollbar">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <StatCard title="Total Employees" value={summary?.total_employees?.toLocaleString() || '5,000'} icon="👥" sub="+2.5%" />
-            <div className="min-w-[280px] flex-1 bg-white p-6 rounded-xl shadow-sm border border-outline-variant">
+            <div className="min-w-0 bg-white p-6 rounded-xl shadow-sm border border-outline-variant">
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex -space-x-2">
                   <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs">♂</div>
