@@ -11,6 +11,10 @@ scikit-learn==1.4.2
 joblib==1.4.2
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
+# Pin bcrypt: passlib 1.7.4 is incompatible with bcrypt >= 4.1 (its backend
+# self-test raises "password cannot be longer than 72 bytes"), which breaks
+# auth on fresh installs (e.g. Render). 4.0.1 is the last compatible release.
+bcrypt==4.0.1
 python-multipart==0.0.9
 requests==2.31.0
 httpx==0.27.0
