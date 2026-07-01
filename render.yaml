@@ -1,0 +1,27 @@
+# Render Blueprint for the FastAPI + ML backend.
+# The ML stack (scikit-learn/scipy/pandas) is too large for Vercel's 250 MB
+# serverless limit, so the backend runs here while the Next.js frontend runs on
+# Vercel. Deploy: Render Dashboard -> New -> Blueprint -> connect this repo.
+services:
+  - type: web
+    name: hr-ai-backend
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # Set this in the Render dashboard to your Neon Postgres connection string.
+      - key: DATABASE_URL
+        sync: false
+      # Set this to your deployed frontend origin (for CORS), e.g.
+      # https://your-frontend.vercel.app
+      - key: FRONTEND_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "60"

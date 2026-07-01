@@ -14,7 +14,11 @@ from app.synthetic_data.generator import (
     compute_labels_for_df, get_nine_box, add_engineered_scores, ENGINEERED_COLUMNS,
 )
 
-MODEL_PATH = "models/employee_9box_model.pkl"
+# The trained artifact is written to disk. On Vercel the project directory is
+# read-only, so use the writable /tmp directory there; locally it stays under
+# ./models. Behaviour is identical — only the storage location differs.
+MODEL_DIR = "/tmp/models" if os.environ.get("VERCEL") else "models"
+MODEL_PATH = os.path.join(MODEL_DIR, "employee_9box_model.pkl")
 
 # Only the raw, uploadable attributes are model inputs. The talent labels
 # (performance_level, potential_level, nine_box) are the prediction TARGETS —
@@ -108,7 +112,7 @@ def train_model(db: Session):
     }
 
     artifact = {"performance": perf_pipe, "potential": pot_pipe, "features": MODEL_FEATURES}
-    os.makedirs("models", exist_ok=True)
+    os.makedirs(MODEL_DIR, exist_ok=True)
     joblib.dump(artifact, MODEL_PATH)
 
     registry = ModelRegistry(model_name="RandomForest_9Box", version="2.0", metrics=metrics)

@@ -3,7 +3,12 @@ from typing import Optional
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/hr_ai_platform"
+    # In production (e.g. Vercel) DATABASE_URL MUST be provided via an
+    # environment variable pointing at a hosted database (e.g. Postgres). The
+    # default below is a local SQLite file for development only — it deliberately
+    # does NOT point at a localhost database server, so a missing env var never
+    # causes a "connection refused to 127.0.0.1:5432" failure in the cloud.
+    DATABASE_URL: str = "sqlite:///./hr_ai_platform.db"
     SECRET_KEY: str = "your-super-secret-jwt-key-change-this-in-production-minimum-32-chars"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60

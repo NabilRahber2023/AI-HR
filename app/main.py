@@ -17,8 +17,17 @@ from app.ml.routes import router as ml_router
 from app.recommendation.routes import router as recommendation_router
 from app.chatbot.routes import router as chatbot_router
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Create tables. Best-effort: on a serverless cold start the database may be
+# briefly unreachable, and this runs at import time — so never let it crash the
+# whole function (which would surface as FUNCTION_INVOCATION_FAILED). Any real
+# connectivity problem still surfaces on the request that actually needs the DB.
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as exc:  # pragma: no cover - depends on runtime DB availability
+    import logging
+    logging.getLogger("uvicorn.error").warning(
+        "Skipped create_all at startup (database not reachable yet): %s", exc
+    )
 
 app = FastAPI(
     title="HR AI Platform - 9-Box Grid",

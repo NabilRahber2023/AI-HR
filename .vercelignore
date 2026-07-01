@@ -1,0 +1,19 @@
+# Keep the Python serverless bundle small (Vercel has a size limit and the
+# ML deps are already heavy). None of the below is needed at request time.
+venv/
+.venv/
+frontend/
+node_modules/
+tests/
+alembic/
+data/
+*.md
+*.bat
+*.ps1
+.pytest_cache/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+setup_db.py
+seed.py
