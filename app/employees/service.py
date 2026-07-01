@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from app.employees.models import Employee
 from app.employees.validators import clean_dataframe
 from app.ml.predictor import predict_labels_for_df
-from app.users.extra_models import UploadedDataset
+from app.users.extra_models import UploadedDataset, PredictionLog
 
 
 def get_all_employees(db: Session, skip: int = 0, limit: int = 100):
@@ -49,6 +49,10 @@ def process_csv_upload(db: Session, df: pd.DataFrame, filename: str, user_id: in
     # The uploaded CSV becomes the new source of truth: clear the existing
     # workforce so every dashboard (department performance, performance-level
     # distribution, 9-box, etc.) reflects exactly the data just uploaded.
+    # Clear dependent rows first — prediction_logs has a foreign key to
+    # employees.id, and Postgres (unlike SQLite) enforces it, so deleting
+    # employees while logs reference them raises a ForeignKeyViolation.
+    db.query(PredictionLog).delete()
     db.query(Employee).delete()
 
     records = []
