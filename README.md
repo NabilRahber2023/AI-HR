@@ -7,6 +7,23 @@ Runs fully locally with **SQLite** (zero database setup). Optional **Ollama** po
 
 ---
 
+## 🌐 Live Demo
+
+| | URL |
+|---|---|
+| **App (frontend)** | https://hr-ai-frontend-tan.vercel.app |
+| **API (backend)** | https://hr-ai-backend-xd95.onrender.com |
+| **API docs** | https://hr-ai-backend-xd95.onrender.com/docs |
+
+**Demo login:** `admin@company.com / admin123` (admin) · `user@company.com / user123` (user)
+
+Hosted as **Frontend → Vercel**, **Backend → Render**, **Database → Neon Postgres**.
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for the full cloud setup. Two free-tier notes:
+the Render backend sleeps after ~15 min idle (first request wakes it in ~50 s), and the
+chatbot uses its rule-based fallback in the cloud (Ollama runs locally only).
+
+---
+
 ## ⚡ TL;DR — Run It
 
 ```powershell
@@ -36,6 +53,7 @@ Then open **http://localhost:3000** and log in with `admin@company.com / admin12
 | **AI/LLM** | Ollama (default `phi3:mini`; any pulled model works) |
 | **Frontend** | Next.js 14 (App Router), React 18, Tailwind CSS, Recharts, Zustand |
 | **Auth** | JWT + bcrypt |
+| **Hosting** | Vercel (frontend) · Render (backend) · Neon Postgres (DB) — see [DEPLOYMENT.md](DEPLOYMENT.md) |
 
 ---
 

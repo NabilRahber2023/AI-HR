@@ -36,6 +36,7 @@ The system follows a clean separation of concerns:
 - **ML Pipeline**: Scikit-learn Pipelines with ColumnTransformer preprocessing + RandomForest, predicting talent levels from raw metrics
 - **Frontend**: Next.js 14 (App Router) with Zustand state management, protected routing, a public landing page, and a fully responsive Tailwind UI (fixed sidebar on desktop, slide-in drawer navigation on mobile)
 - **LLM**: Local Ollama inference with streaming, timeout handling, and fallback chains
+- **Deployment**: Frontend on Vercel, FastAPI + ML backend on Render, and Neon Postgres as the managed database (see `DEPLOYMENT.md`). The code is serverless-portable — SQLite locally, Postgres in the cloud — via environment-driven configuration.
 
 ### Business Value
 

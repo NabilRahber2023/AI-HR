@@ -4,6 +4,9 @@ The platform runs fully locally with **SQLite** (no Docker or PostgreSQL require
 The only optional external piece is **Ollama** for live AI chat — the app falls
 back to curated responses when it's not running.
 
+> Deploying to the cloud (Vercel + Render + Neon)? See **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+> A live demo is linked at the top of **[README.md](README.md)**.
+
 ## One-Command Startup
 
 ### Option 1: PowerShell Script (Recommended) ⭐
